@@ -1,0 +1,5 @@
+var referencia = null;
+if (referencia == null) {
+    bool inicializado = false;
+    return inicializado;
+}

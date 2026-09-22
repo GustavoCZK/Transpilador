@@ -1,0 +1,5 @@
+int totalItens = 0;
+while (totalItens < 10) {
+    totalItens++;
+}
+return totalItens;

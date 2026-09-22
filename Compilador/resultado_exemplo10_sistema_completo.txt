@@ -1,0 +1,5 @@
+﻿privado duplo taxaFixa = 5.75;
+texto namespaceApp = "SistemaAcademico";
+booleano processado = falso;
+inteiro resultadoFinal = 100;
+retorne resultadoFinal;

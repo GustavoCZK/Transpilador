@@ -1,0 +1,7 @@
+int opcaoMenu = 2;
+switch (opcaoMenu) {
+    case 1:
+        return opcaoMenu;
+    default:
+        return opcaoMenu;
+}

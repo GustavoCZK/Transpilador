@@ -1,0 +1,7 @@
+try {
+    int conexao = 1;
+} catch {
+    int falha = 404;
+} finally {
+    return conexao;
+}
