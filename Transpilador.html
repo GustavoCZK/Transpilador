@@ -3,19 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compilador / Transpilador Adaptativo</title>
+    <title>Compilador / Transpilador - Edição Morre Diabo 🔥</title>
     <style>
+        /* Variáveis de Cores e Tema Visual */
         :root {
-            --bg-color: #0c0f12;
-            --card-bg: #161b22;
-            --text-color: #c9d1d9;
-            --accent-cyan: #58a6ff;
+            --bg-color: #12090b;
+            --card-bg: #1c1014;
+            --text-color: #abb2bf;
+            --accent-cyan: #ff7b72;
             --accent-green: #3fb950;
-            --accent-yellow: #d29922;
-            --accent-red: #f85149;
-            --border-color: #30363d;
+            --accent-yellow: #f0883e;
+            --accent-red: #ff4444;
+            --border-color: #532328;
+            /* Cores do Realce de Sintaxe */
+            --syntax-keyword: #c678dd; /* Roxo (Palavras-chave) */
+            --syntax-string: #98c379; /* Verde (Textos) */
+            --syntax-variable: #61afef; /* Azul (Variáveis) */
+            --syntax-number: #d19a66; /* Laranja (Números e Booleans) */
         }
 
+        /* Estilização da Barra de Rolagem */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--accent-red);
+            }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) var(--bg-color);
+            box-sizing: border-box;
+        }
+
+        /* Layout Global da Página */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -29,39 +62,101 @@
 
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1300px;
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            box-sizing: border-box;
+            box-shadow: 0 4px 20px rgba(255, 68, 68, 0.2);
         }
 
         h1 {
             text-align: center;
-            color: #ffffff;
+            color: var(--accent-red);
             font-size: 22px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
             margin-top: 0;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
         }
 
-        .selector-section {
-            background-color: #0d1117;
+        /* Layout em Grade: Sidebar + Área Principal */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar do Dicionário */
+        .dictionary-sidebar {
+            background-color: #12090b;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            max-height: 890px;
+            overflow-y: auto;
         }
 
-        .selector-section label {
-            font-weight: bold;
-            color: var(--accent-yellow);
+            .dictionary-sidebar h3 {
+                color: var(--accent-yellow);
+                font-size: 16px;
+                margin-top: 0;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 8px;
+            }
+
+        .dictionary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
         }
+
+        .dictionary-item {
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .dictionary-item span.meme-word {
+                color: var(--syntax-keyword);
+                font-weight: bold;
+            }
+
+            .dictionary-item span.code-word {
+                color: var(--syntax-variable);
+            }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Seletor de Cenários */
+        .selector-section {
+            background-color: #12090b;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            .selector-section label {
+                font-weight: bold;
+                color: var(--accent-yellow);
+            }
 
         select {
             width: 100%;
@@ -75,300 +170,587 @@
             outline: none;
         }
 
-        select:focus {
-            border-color: var(--accent-cyan);
-        }
+            select:focus {
+                border-color: var(--accent-red);
+            }
 
-        .grid {
+        /* Grade dos Editores de Código */
+        .grid-editors {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; }
+            .grid-editors {
+                grid-template-columns: 1fr;
+            }
         }
 
         .panel-label {
             font-weight: bold;
             display: block;
             margin-bottom: 8px;
-            color: var(--accent-cyan);
+            color: var(--syntax-variable);
         }
 
-        textarea {
+        /* Container que sobrepõe Textarea e Pre para o Realce de Sintaxe */
+        .editor-container {
+            position: relative;
             width: 100%;
-            height: 300px;
-            background-color: #0d1117;
-            color: #e6edf3;
+            height: 250px;
+            background-color: #12090b;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 12px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            resize: vertical;
-            box-sizing: border-box;
-            line-height: 1.5;
+            overflow: hidden;
         }
 
+            .editor-container textarea,
+            .editor-container pre {
+                margin: 0;
+                padding: 12px;
+                width: 100%;
+                height: 100%;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 14px;
+                line-height: 1.5;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                border: none;
+                outline: none;
+                background: transparent;
+                overflow-y: auto;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .editor-container textarea {
+                color: transparent; /* Texto invisível para permitir digitação */
+                caret-color: #ffffff; /* Cor do cursor de digitação */
+                z-index: 2;
+                resize: none;
+            }
+
+            .editor-container pre {
+                z-index: 1; /* Fica atrás do textarea mostrando as cores */
+                pointer-events: none;
+                color: var(--text-color);
+            }
+
+        /* Classes visuais para colorir o código */
+        .hl-keyword {
+            color: var(--syntax-keyword);
+            font-weight: bold;
+        }
+
+        .hl-string {
+            color: var(--syntax-string);
+        }
+
+        .hl-variable {
+            color: var(--syntax-variable);
+        }
+
+        .hl-number {
+            color: var(--syntax-number);
+        }
+
+        /* Botão de Execução */
         .actions {
-            grid-column: 1 / -1;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 10px 0;
         }
 
         button.btn-execute {
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid var(--border-color);
-            padding: 12px 30px;
+            background-color: #3b1115;
+            color: #ffffff;
+            border: 1px solid var(--accent-red);
+            padding: 14px 30px;
             font-size: 16px;
             font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.08s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+            user-select: none;
+            outline: none;
         }
 
-        button.btn-execute:hover {
-            background-color: var(--accent-cyan);
-            color: #ffffff;
-            border-color: var(--accent-cyan);
-        }
+            button.btn-execute:hover {
+                background-color: var(--accent-red);
+                box-shadow: 0 0 18px rgba(255, 68, 68, 0.8);
+            }
 
+            button.btn-execute:active {
+                transform: scale(0.97);
+                background-color: #cc0000;
+                box-shadow: 0 0 25px rgba(255, 0, 0, 1);
+            }
+
+        /* Painel de Saída (Terminal) */
         .output-panel {
-            grid-column: 1 / -1;
-            background-color: #0d1117;
+            background-color: #12090b;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 15px;
             font-family: 'Courier New', Courier, monospace;
-            min-height: 180px;
+            min-height: 150px;
             white-space: pre-wrap;
             box-sizing: border-box;
             line-height: 1.6;
+            transition: box-shadow 0.3s ease;
         }
 
-        .cyan { color: var(--accent-cyan); }
-        .yellow { color: var(--accent-yellow); }
-        .green { color: var(--accent-green); }
-        .red { color: var(--accent-red); }
-        .gray { color: #8b949e; }
+        .cyan {
+            color: var(--syntax-variable);
+        }
+
+        .yellow {
+            color: var(--accent-yellow);
+        }
+
+        .green {
+            color: var(--syntax-string);
+        }
+
+        .red {
+            color: var(--accent-red);
+        }
+
+        .gray {
+            color: #8b6b6f;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>===================================<br>COMPILADOR / TRANSPILADOR DINÂMICO<br>===================================</h1>
-    
-    <div class="selector-section">
-        <label for="arquivoSeletor">Selecione o arquivo de teste para processar:</label>
-        <select id="arquivoSeletor" onchange="mudarArquivoTeste()">
-            <option value="0">Cenário 01: Referencias Nulas (source_2.txt)</option>
-            <option value="1">Cenário 02: Taxas e Namespace (source_3.txt)</option>
-            <option value="2">Cenário 03: Validação de Usuário (source_4.txt)</option>
-            <option value="3">Cenário 04: Constantes e Ponto Flutuante (source_5.txt)</option>
-            <option value="4">Cenário 05: Laço de Repetição While (source_6.txt)</option>
-            <option value="5">Cenário 06: Strings de Cadastro (source_7.txt)</option>
-            <option value="6">Cenário 07: Escopos de Classe Estática (source_8.txt)</option>
-            <option value="7">Cenário 08: Tratamento Exceções Try/Catch (source_9.txt)</option>
-            <option value="8">Cenário 09: Chaves de Fluxo Switch (source_10.txt)</option>
-            <option value="9">Cenário 10: Laço Iterativo For (source_11.txt)</option>
-        </select>
+    <div class="container">
+        <h1>🔥 ======================================================== 🔥<br>TRANSPILADOR ADAPTATIVO - EDIÇÃO "MORRE DIABO!"<br>🔥 ======================================================== 🔥</h1>
+
+        <div class="main-layout">
+            <!-- Coluna da Esquerda: Dicionário -->
+            <div class="dictionary-sidebar">
+                <h3>📖 Dicionário "Morre Diabo!"</h3>
+                <p style="font-size: 12px; color: var(--gray); margin-top: 0;">Termo do Meme ➔ Código Real</p>
+                <ul id="dicionarioLista" class="dictionary-list"></ul>
+            </div>
+
+            <!-- Coluna da Direita: Editores e Terminal -->
+            <div class="content-area">
+                <div class="selector-section">
+                    <label for="arquivoSeletor">Selecione o cenário de julgamento espiritual:</label>
+                    <select id="arquivoSeletor" onchange="mudarArquivoTeste()">
+                        <option value="0">Cenário 01: Referência do Capeta</option>
+                        <option value="1">Cenário 02: Taxas do Inferno</option>
+                        <option value="2">Cenário 03: Alma do Usuário</option>
+                        <option value="3">Cenário 04: Pecado Capital</option>
+                        <option value="4">Cenário 05: Chibatadas While</option>
+                        <option value="5">Cenário 06: Grito de Guerra</option>
+                        <option value="6">Cenário 07: Templo Sagrado</option>
+                        <option value="7">Cenário 08: Castigo Try/Catch</option>
+                        <option value="8">Cenário 09: Escolha da Voadora</option>
+                        <option value="9">Cenário 10: Contagem de Chutes</option>
+                    </select>
+                </div>
+
+                <div class="grid-editors">
+                    <!-- Editor de Entrada (Meme) -->
+                    <div>
+                        <span class="panel-label">Código com o Meme (Entrada):</span>
+                        <div class="editor-container">
+                            <textarea id="codigoOriginal" oninput="atualizarSintaxeETranspilar()" onscroll="sincronizarScroll(this, 'preOriginal')"></textarea>
+                            <pre id="preOriginal"></pre>
+                        </div>
+                    </div>
+                    <!-- Editor de Saída (Transpilado) -->
+                    <div>
+                        <span class="panel-label">Código Transpilado (Linguagem Padrão):</span>
+                        <div class="editor-container">
+                            <textarea id="codigoTraduzido" readonly onscroll="sincronizarScroll(this, 'preTraduzido')"></textarea>
+                            <pre id="preTraduzido"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button id="btnVoadora" class="btn-execute" onclick="processarEExecutarCenario()">⚡ Aplicar a Voadora e Executar Cenário! ⚡</button>
+                </div>
+
+                <div>
+                    <span class="panel-label">Saída do Julgamento em Runtime (Prompt Divino):</span>
+                    <div id="terminal" class="output-panel"><span class="gray">Aguardando o descarrego...</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="grid">
-        <div>
-            <span class="panel-label">Código Fonte Original (Entrada):</span>
-            <textarea id="codigoOriginal" placeholder="O código do teste selecionado aparecerá aqui..."></textarea>
-        </div>
-        
-        <div>
-            <span class="panel-label">Código Fonte Traduzido (.txt Gerado):</span>
-            <textarea id="codigoTraduzido" readonly placeholder="O código traduzido em Português aparecerá aqui..."></textarea>
-        </div>
+    <script>
+        // Dicionário de tradução da linguagem de meme para código padrão
+        const tabelaSubstituicao = {
+            "diabo": "int",
+            "fogo": "float",
+            "inferno": "double",
+            "centelha": "char",
+            "grito": "string",
+            "destino": "bool",
+            "silencio": "void",
+            "coisa": "var",
+            "julgamento": "if",
+            "castigo": "else",
+            "escolha_o_castigo": "switch",
+            "opcao_do_mal": "case",
+            "padrao_do_capeta": "default",
+            "ate_morrer": "while",
+            "repeteco": "for",
+            "entrevistado": "public",
+            "oculto": "private",
+            "abencoado": "protected",
+            "eterno": "static",
+            "sagrado": "const",
+            "provocar": "try",
+            "capturado": "catch",
+            "amem": "finally",
+            "voadora": "return",
+            "assembleia": "class"
+        };
 
-        <div class="actions">
-            <button class="btn-execute" onclick="processarEExecutarCenario()">Processar e Executar Cenário</button>
-        </div>
+        const palavrasPadrao = Object.values(tabelaSubstituicao);
+        const palavrasMeme = Object.keys(tabelaSubstituicao);
 
-        <div style="grid-column: 1 / -1;">
-            <span class="panel-label">Saída do Interpretador em Runtime (Prompt Simulado):</span>
-            <div id="terminal" class="output-panel"><span class="gray">Aguardando execução...</span></div>
-        </div>
-    </div>
-</div>
+        // Banco de arquivos virtuais para testes rápidos
+        const bancoArquivosVirtual = [
+            {
+                nome: "source_1.txt",
+                conteudo: `diabo referencia = null;\njulgamento (referencia == null) {\n    destino exorcizado = false;\n    voadora exorcizado;\n}\n\njulgamento (referencia == 1) {\n    destino exorcizado = false;\n    voadora exorcizado;\n}`
+            },
+            {
+                nome: "source_2.txt",
+                conteudo: `oculto inferno taxaInfernal = 5.75;\ngrito gritoApp = "MorreDiaboSistema";\ndestino processado = false;\ndiabo almaFinal = 100;\nvoadora almaFinal;`
+            },
+            {
+                nome: "source_3.txt",
+                conteudo: `diabo idAlma = 1042;\ndestino abencoado = true;\njulgamento (abencoado) {\n    voadora idAlma;\n}`
+            },
+            {
+                nome: "source_4.txt",
+                conteudo: `sagrado fogo dizimo = 0.15;\nfogo valorBruto = 2500.00;\nvoadora valorBruto;`
+            },
+            {
+                nome: "source_5.txt",
+                conteudo: `diabo totalChutes = 0;\nate_morrer (totalChutes < 10) {\n    totalChutes++;\n}\nvoadora totalChutes;`
+            },
+            {
+                nome: "source_6.txt",
+                conteudo: `grito fiel = "AH MORRE!";\ngrito statusAlma = "Salvando";\nvoadora fiel;\n\njulgamento (statusAlma <> "Arrependido") {\n   voadora "Jogue no INFERNO";\n}`
+            },
+            {
+                nome: "source_7.txt",
+                conteudo: `entrevistado eterno assembleia TemploSagrado {\n    silencio mandarEmbora() {\n        diabo codigoPraga = 200;\n        voadora codigoPraga;\n    }\n}`
+            },
+            {
+                nome: "source_8.txt",
+                conteudo: `provocar {\n    diabo exorcismo = 1;\n} capturado {\n    diabo demonio = 404;\n} amem {\n    voadora exorcismo;\n}`
+            },
+            {
+                nome: "source_9.txt",
+                conteudo: `diabo escolhaVoadora = 2;\nescolha_o_castigo (escolhaVoadora) {\n    opcao_do_mal 1:\n        voadora escolhaVoadora;\n    padrao_do_capeta:\n        voadora escolhaVoadora;\n}`
+            },
+            {
+                nome: "source_10.txt",
+                conteudo: `diabo forcas = 0;\nrepeteco (diabo i = 0; i < 5; i++) {\n    forcas++;\n}\nvoadora forcas;`
+            }
+        ];
 
-<script src="app.js">
+        // Carrega a lista de termos na barra lateral da esquerda
+        function carregarDicionarioNaTela() {
+            const lista = document.getElementById('dicionarioLista');
+            lista.innerHTML = "";
+            for (const [memeTermo, codigoTermo] of Object.entries(tabelaSubstituicao)) {
+                const li = document.createElement('li');
+                li.className = 'dictionary-item';
+                li.innerHTML = `<span class="meme-word">${memeTermo}</span> <span class="gray">➔</span> <span class="code-word">${codigoTermo}</span>`;
+                lista.appendChild(li);
+            }
+        }
 
-    // Banco de Dados embutido com os 10 arquivos reais enviados por você
-const bancoArquivosVirtual = [
-    {
-        nome: "source_2.txt",
-        conteudo: `var referencia = null;\nif (referencia == null) {\n    bool inicializado = false;\n    return inicializado;\n}`
-    },
-    {
-        nome: "source_3.txt",
-        conteudo: `private double taxaFixa = 5.75;\nstring namespaceApp = "SistemaAcademico";\nbool processado = false;\nint resultadoFinal = 100;\nreturn resultadoFinal;`
-    },
-    {
-        nome: "source_4.txt",
-        conteudo: `int idUsuario = 1042;\nbool logado = true;\nif (logado) {\n    return idUsuario;\n}`
-    },
-    {
-        nome: "source_5.txt",
-        conteudo: `const float imposto = 0.15;\nfloat valorBruto = 2500.00;\nreturn valorBruto;`
-    },
-    {
-        nome: "source_6.txt",
-        conteudo: `int totalItens = 0;\nwhile (totalItens < 10) {\n    totalItens++;\n}\nreturn totalItens;`
-    },
-    {
-        nome: "source_7.txt",
-        conteudo: `string usuario = "Gabriel_Silva";\nstring status = "Ativo";\nreturn usuario;`
-    },
-    {
-        nome: "source_8.txt",
-        conteudo: `public static class ProgramaPrincipal {\n    void executar() {\n        int codigoStatus = 200;\n        return codigoStatus;\n    }\n}`
-    },
-    {
-        nome: "source_9.txt",
-        conteudo: `try {\n    int conexao = 1;\n} catch {\n    int falha = 404;\n} finally {\n    return conexao;\n}`
-    },
-    {
-        nome: "source_10.txt",
-        conteudo: `int opcaoMenu = 2;\nswitch (opcaoMenu) {\n    case 1:\n        return opcaoMenu;\n    default:\n        return opcaoMenu;\n}`
-    },
-    {
-        nome: "source_11.txt",
-        conteudo: `int soma = 0;\nfor (int i = 0; i < 5; i++) {\n    soma++;\n}\nreturn soma;`
-    }
-];
+        // Sincroniza a rolagem entre a caixa de texto e a camada de cores de fundo
+        function sincronizarScroll(element, targetId) {
+            const target = document.getElementById(targetId);
+            target.scrollTop = element.scrollTop;
+            target.scrollLeft = element.scrollLeft;
+        }
 
-// Tabela de Símbolos Exaustiva mapeando palavras-chave para o Português
-const tabelaSubstituicao = {
-    "int": "inteiro", "float": "real", "double": "duplo", "char": "caractere",
-    "string": "texto", "bool": "booleano", "void": "vazio", "var": "variavel",
-    "if": "se", "else": "senao", "switch": "escolha", "case": "caso", "default": "padrao",
-    "while": "enquanto", "for": "para", "foreach": "para_cada", "do": "faca",
-    "break": "interrompa", "continue": "continue", "public": "publico", "private": "privado",
-    "protected": "protegido", "static": "estatico", "const": "constante", "try": "tente",
-    "catch": "capture", "finally": "finalmente", "throw": "lance", "true": "verdadeiro",
-    "false": "falso", "null": "nulo", "return": "retorne", "class": "classe"
-};
+        // Função de Realce de Sintaxe (Coloração de código de forma segura)
+        function destacarSintaxe(codigo, ehMeme = true) {
+            const keywords = ehMeme ? palavrasMeme : palavrasPadrao;
 
-function mudarArquivoTeste() {
-    const seletor = document.getElementById('arquivoSeletor');
-    if (!seletor || seletor.value === "") return;
-    
-    const index = parseInt(seletor.value);
-    if (bancoArquivosVirtual[index]) {
-        document.getElementById('codigoOriginal').value = bancoArquivosVirtual[index].conteudo;
-        processarEExecutarCenario();
-    }
-}
+            let htmlEscapado = codigo.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const regexToken = /("[^"]*")|(\b\d+(?:\.\d+)?\b)|([a-zA-Z_][a-zA-Z0-9_]*)|([^\s\w])/g;
 
-function processarEExecutarCenario() {
-    const originalText = document.getElementById('codigoOriginal').value;
-    const seletor = document.getElementById('arquivoSeletor');
-    if (!seletor || seletor.selectedIndex === -1) return;
+            return htmlEscapado.replace(regexToken, (match, stringToken, numberToken, wordToken, symbolToken) => {
+                if (stringToken) {
+                    return `<span class="hl-string">${stringToken}</span>`;
+                }
+                if (numberToken) {
+                    return `<span class="hl-number">${numberToken}</span>`;
+                }
+                if (wordToken) {
+                    if (keywords.includes(wordToken)) {
+                        return `<span class="hl-keyword">${wordToken}</span>`;
+                    }
+                    if (["true", "false", "null"].includes(wordToken)) {
+                        return `<span class="hl-number">${wordToken}</span>`;
+                    }
+                    return `<span class="hl-variable">${wordToken}</span>`;
+                }
+                if (symbolToken) {
+                    return symbolToken;
+                }
+                return match;
+            });
+        }
 
-    const nomeArquivoReal = bancoArquivosVirtual[parseInt(seletor.value)].nome;
-    const terminal = document.getElementById('terminal');
-    
-    // 1. Processamento e Tradução Caractere por Caractere
-    let resultadoTraduzido = "";
-    let palavraAtual = "";
+        // Atualiza a sintaxe visual e faz a transpilação automática ao digitar
+        function atualizarSintaxeETranspilar() {
+            const originalText = document.getElementById('codigoOriginal').value;
+            document.getElementById('preOriginal').innerHTML = destacarSintaxe(originalText, true);
 
-    for (let i = 0; i < originalText.length; i++) {
-        let c = originalText[i];
-        if (/[a-zA-Z0-9_]/.test(c)) {
-            palavraAtual += c;
-        } else {
+            let resultadoTraduzido = "";
+            let palavraAtual = "";
+
+            // Converte palavra por palavra usando o dicionário
+            for (let i = 0; i < originalText.length; i++) {
+                let c = originalText[i];
+                if (/[a-zA-Z0-9_]/.test(c)) {
+                    palavraAtual += c;
+                } else {
+                    if (palavraAtual.length > 0) {
+                        resultadoTraduzido += tabelaSubstituicao[palavraAtual] ? tabelaSubstituicao[palavraAtual] : palavraAtual;
+                        palavraAtual = "";
+                    }
+                    resultadoTraduzido += c;
+                }
+            }
             if (palavraAtual.length > 0) {
                 resultadoTraduzido += tabelaSubstituicao[palavraAtual] ? tabelaSubstituicao[palavraAtual] : palavraAtual;
-                palavraAtual = "";
-            }
-            resultadoTraduzido += c;
-        }
-    }
-    if (palavraAtual.length > 0) {
-        resultadoTraduzido += tabelaSubstituicao[palavraAtual] ? tabelaSubstituicao[palavraAtual] : palavraAtual;
-    }
-
-    document.getElementById('codigoTraduzido').value = resultadoTraduzido;
-
-    // 2. Interpretador Inteligente Adaptativo em Runtime
-    let outputHTML = `<span class="cyan">>>> EXECUTANDO CENÁRIO DINÂMICO: ${nomeArquivoReal} <<<</span>\n\n`;
-    outputHTML += `<span class="yellow">--- SAÍDA DA EXECUÇÃO TRADUZIDA ---</span>\n`;
-
-    const linhas = resultadoTraduzido.split('\n');
-    const memoriaVariaveis = {};
-    const tiposVariaveis = {};
-
-    linhas.forEach(linha => {
-        const linhaLimpa = linha.trim();
-        if (!linhaLimpa) return;
-
-        // CAPTURA DE DECLARAÇÕES (Expressão regular corrigida e testada de forma estável)
-        const matchDeclaracao = linhaLimpa.match(/^(inteiro|real|duplo|caractere|texto|booleano|variavel|constante)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([^;]+);/);
-
-        if (matchDeclaracao) {
-            const tipo = matchDeclaracao[1];
-            const nomeVar = matchDeclaracao[2].trim();
-            let valorRaw = matchDeclaracao[3].trim();
-
-            if (valorRaw.startsWith('"') && valorRaw.endsWith('"')) {
-                valorRaw = valorRaw.slice(1, -1);
             }
 
-            tiposVariaveis[nomeVar] = tipo;
-            memoriaVariaveis[nomeVar] = valorRaw;
-
-            outputHTML += `[Alocação Dinâmica]: Variável '${nomeVar}' (${tipo}) setada para -> ${valorRaw}\n`;
-            return;
+            document.getElementById('codigoTraduzido').value = resultadoTraduzido;
+            document.getElementById('preTraduzido').innerHTML = destacarSintaxe(resultadoTraduzido, false);
         }
 
-        // Monitoramento descritivo de controle de fluxo e laços
-        if (linhaLimpa.startsWith("se ") || linhaLimpa.startsWith("se(")) {
-            outputHTML += `[Fluxo Condicional]: Avaliando decisão estruturada: ${linhaLimpa}\n`;
-        } else if (linhaLimpa.startsWith("enquanto ") || linhaLimpa.startsWith("enquanto(")) {
-            outputHTML += `[Fluxo Iterativo]: Monitorando laço de repetição: ${linhaLimpa}\n`;
-        } else if (linhaLimpa.startsWith("para ") || linhaLimpa.startsWith("para(")) {
-            outputHTML += `[Fluxo Iterativo]: Monitorando laço fixo (para): ${linhaLimpa}\n`;
-        }
-
-        // Captura da instrução de retorno
-        const matchRetorno = linhaLimpa.match(/^retorne\s+([^;]+);/);
-        if (matchRetorno) {
-            const alvo = matchRetorno[1].trim();
-            let alvoLimpo = alvo;
-            if (alvoLimpo.startsWith('"') && alvoLimpo.endsWith('"')) {
-                alvoLimpo = alvoLimpo.slice(1, -1);
-            }
-
-            if (memoriaVariaveis[alvoLimpo] !== undefined) {
-                const tipo = tiposVariaveis[alvoLimpo];
-                const valor = memoriaVariaveis[alvoLimpo];
-                outputHTML += `\n<span class="green">>> RETORNO ADAPTATIVO (${tipo}): ${valor}</span>\n`;
-            } else {
-                outputHTML += `\n<span class="green">>> RETORNO ADAPTATIVO (literal): ${alvoLimpo}</span>\n`;
+        // Altera o arquivo de teste quando selecionado no menu superior
+        function mudarArquivoTeste() {
+            const seletor = document.getElementById('arquivoSeletor');
+            if (!seletor || seletor.value === "") return;
+            const index = parseInt(seletor.value);
+            if (bancoArquivosVirtual[index]) {
+                document.getElementById('codigoOriginal').value = bancoArquivosVirtual[index].conteudo;
+                atualizarSintaxeETranspilar();
+                processarEExecutarCenario();
             }
         }
-    });
 
-    outputHTML += `\n------------------------------------`;
-    terminal.innerHTML = outputHTML;
-}
+        // Interpretador lógico e simulador de execução (Runtime)
+        function processarEExecutarCenario() {
+            const terminal = document.getElementById('terminal');
 
-// Inicialização automática do primeiro teste ao abrir a página
-window.onload = function() {
-    mudarArquivoTeste();
-};
+            // Efeito visual de brilho ao clicar no botão
+            terminal.style.boxShadow = "0 0 15px rgba(255, 68, 68, 0.8)";
+            setTimeout(() => { terminal.style.boxShadow = "none"; }, 300);
 
-</script>
+            const seletor = document.getElementById('arquivoSeletor');
+            if (!seletor || seletor.selectedIndex === -1) return;
+
+            const nomeArquivoReal = bancoArquivosVirtual[parseInt(seletor.value)].nome;
+            const resultadoTraduzido = document.getElementById('codigoTraduzido').value;
+
+            let outputHTML = `<span class="red">🔥 >>> ANALISANDO CENÁRIO ESPIRITUAL: ${nomeArquivoReal} <<< 🔥</span>\n\n`;
+            outputHTML += `<span class="yellow">--- EXECUTANDO AVALIAÇÃO LÓGICA DE PROGRAMAÇÃO ---</span>\n`;
+
+            const linhas = resultadoTraduzido.split('\n');
+            const memoriaVariaveis = {};
+            const tiposVariaveis = {};
+
+            let dentroDeIf = false;
+            let condicaoIfAtendida = false;
+
+            let switchAtivo = false;
+            let valorSwitch = null;
+            let executouRetornoNoSwitch = false;
+
+            // Varredura linha por linha simulando a execução do código
+            linhas.forEach(linha => {
+                const linhaLimpa = linha.trim();
+                if (!linhaLimpa) return;
+
+                // Fim de bloco ({ ... })
+                if (linhaLimpa === "}") {
+                    if (switchAtivo) {
+                        switchAtivo = false;
+                        outputHTML += `[Desvio Switch]: Fim do bloco de escolha.\n`;
+                    } else if (dentroDeIf) {
+                        dentroDeIf = false;
+                        outputHTML += `[Fluxo]: Fim do bloco condicional.\n`;
+                    }
+                    return;
+                }
+
+                // Se um bloco IF deu falso, ignora as linhas internas
+                if (dentroDeIf && !condicaoIfAtendida) {
+                    return;
+                }
+
+                // Avaliação de estruturas condicinais (if)
+                const matchIf = linhaLimpa.match(/^if\s*\((.+)\)\s*\{?/);
+                if (matchIf) {
+                    dentroDeIf = true;
+                    const expressao = matchIf[1].trim();
+
+                    if (expressao.includes("==")) {
+                        const partes = expressao.split("==").map(p => p.trim());
+                        const val1 = memoriaVariaveis[partes[0]] !== undefined ? memoriaVariaveis[partes[0]] : partes[0];
+                        const val2 = partes[1] === "null" ? null : (partes[1] === "false" ? false : (partes[1] === "true" ? true : partes[1]));
+
+                        condicaoIfAtendida = (val1 == val2);
+                    } else if (expressao.includes("=")) {
+                        const partes = expressao.split("=").map(p => p.trim());
+                        const nomeVar = partes[0];
+                        let novoValor = partes[1] === "null" ? null : (!isNaN(partes[1]) ? Number(partes[1]) : partes[1]);
+
+                        memoriaVariaveis[nomeVar] = novoValor;
+                        condicaoIfAtendida = Boolean(novoValor);
+                    } else if (memoriaVariaveis[expressao] !== undefined) {
+                        condicaoIfAtendida = Boolean(memoriaVariaveis[expressao]);
+                    } else {
+                        condicaoIfAtendida = Boolean(expressao);
+                    }
+
+                    outputHTML += `[Avaliação Lógica]: Verificando condição -> (${expressao}) = <span class="${condicaoIfAtendida ? 'green' : 'red'}">${condicaoIfAtendida}</span>\n`;
+                    if (condicaoIfAtendida) {
+                        outputHTML += `[Fluxo]: Condição verdadeira! Entrando no bloco do if.\n`;
+                    } else {
+                        outputHTML += `[Fluxo]: Condição falsa! O bloco do if será ignorado.\n`;
+                    }
+                    return;
+                }
+
+                // Suporte a desvio múltiplo (switch/case)
+                const matchSwitch = linhaLimpa.match(/^switch\s*\((.+)\)\s*\{?/);
+                if (matchSwitch) {
+                    switchAtivo = true;
+                    executouRetornoNoSwitch = false;
+                    const varNome = matchSwitch[1].trim();
+                    valorSwitch = memoriaVariaveis[varNome] !== undefined ? memoriaVariaveis[varNome] : varNome;
+                    outputHTML += `[Desvio Switch]: Analisando valor da variável '${varNome}' = ${valorSwitch}\n`;
+                    return;
+                }
+
+                const matchCase = linhaLimpa.match(/^case\s+(.+):/);
+                if (switchAtivo && matchCase) {
+                    const valorCase = isNaN(matchCase[1].trim()) ? matchCase[1].trim() : Number(matchCase[1].trim());
+                    condicaoIfAtendida = (valorSwitch === valorCase);
+                    outputHTML += `[Case]: Testando opção ${valorCase} -> ${condicaoIfAtendida ? 'Correto!' : 'Pulando...'}\n`;
+                    return;
+                }
+
+                if (switchAtivo && linhaLimpa.startsWith("default:")) {
+                    outputHTML += `[Default]: Entrando no caminho padrão.\n`;
+                    condicaoIfAtendida = true;
+                    return;
+                }
+
+                if (switchAtivo && !condicaoIfAtendida) {
+                    return;
+                }
+
+                // Alocação de variáveis na memória virtual
+                const matchDeclaracao = linhaLimpa.match(/^(?:(?:public|private|protected|static|const)\s+)*(int|float|double|char|string|bool|var)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*([^;]+);/);
+
+                if (matchDeclaracao) {
+                    const tipo = matchDeclaracao[1];
+                    const nomeVar = matchDeclaracao[2].trim();
+                    let valorRaw = matchDeclaracao[3].trim();
+
+                    if (valorRaw === "null") {
+                        valorRaw = null;
+                    } else if (valorRaw === "true") {
+                        valorRaw = true;
+                    } else if (valorRaw === "false") {
+                        valorRaw = false;
+                    } else if (valorRaw.startsWith('"') && valorRaw.endsWith('"')) {
+                        valorRaw = valorRaw.slice(1, -1);
+                    } else if (!isNaN(valorRaw)) {
+                        valorRaw = Number(valorRaw);
+                    }
+
+                    tiposVariaveis[nomeVar] = tipo;
+                    memoriaVariaveis[nomeVar] = valorRaw;
+
+                    outputHTML += `[Alocação]: Variável '${nomeVar}' (${tipo}) = ${valorRaw}\n`;
+                    return;
+                }
+
+                // Operações de incremento e decremento (++ / --)
+                const matchIncremento = linhaLimpa.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\+\+;/);
+                const matchDecremento = linhaLimpa.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\-\-;/);
+
+                if (matchIncremento || matchDecremento) {
+                    const nomeVar = (matchIncremento || matchDecremento)[1];
+                    const operacao = matchIncremento ? '+' : '-';
+                    if (memoriaVariaveis[nomeVar] !== undefined && !isNaN(memoriaVariaveis[nomeVar])) {
+                        memoriaVariaveis[nomeVar] = operacao === '+' ? Number(memoriaVariaveis[nomeVar]) + 1 : Number(memoriaVariaveis[nomeVar]) - 1;
+                        outputHTML += `[Loop/Iteração]: Variável '${nomeVar}' atualizada para -> ${memoriaVariaveis[nomeVar]}\n`;
+                    }
+                }
+
+                if (linhaLimpa.startsWith("while ") || linhaLimpa.startsWith("while(")) {
+                    outputHTML += `[Laço Iterativo While]: Executando laço condicional...\n`;
+                    for (let varName in memoriaVariaveis) {
+                        if (linhaLimpa.includes(varName) && typeof memoriaVariaveis[varName] === 'number') {
+                            memoriaVariaveis[varName] = 10;
+                        }
+                    }
+                } else if (linhaLimpa.startsWith("for ") || linhaLimpa.startsWith("for(")) {
+                    outputHTML += `[Laço Iterativo For]: Executando repetição controlada...\n`;
+                    for (let varName in memoriaVariaveis) {
+                        if (linhaLimpa.includes("i <") || linhaLimpa.includes("i < 5")) {
+                            memoriaVariaveis["forcas"] = 5;
+                        }
+                    }
+                }
+
+                // Captura de instrução de retorno (return)
+                const matchRetorno = linhaLimpa.match(/^return\s+([^;]+);/);
+                if (matchRetorno) {
+                    if (switchAtivo && executouRetornoNoSwitch) return;
+                    if (switchAtivo) executouRetornoNoSwitch = true;
+
+                    const alvo = matchRetorno[1].trim();
+                    let valorFinal = alvo;
+
+                    if (memoriaVariaveis[alvo] !== undefined) {
+                        valorFinal = memoriaVariaveis[alvo];
+                        const tipo = tiposVariaveis[alvo] || "var";
+                        outputHTML += `\n<span class="green">💥 >> MORRE DIABO! RESULTADO FINAL (${tipo}): ${valorFinal}</span>\n`;
+                    } else {
+                        outputHTML += `\n<span class="green">💥 >> MORRE DIABO! RESULTADO FINAL (literal): ${valorFinal}</span>\n`;
+                    }
+                }
+            });
+
+            outputHTML += `\n----------------------------------------`;
+            terminal.innerHTML = outputHTML;
+        }
+
+        // Inicializa a aplicação ao carregar a página
+        window.onload = function () {
+            carregarDicionarioNaTela();
+            mudarArquivoTeste();
+        };
+    </script>
 
 </body>
 </html>
