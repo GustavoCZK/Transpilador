@@ -1,5 +1,0 @@
-﻿int idUsuario = 1042;
-bool logado = true;
-if (logado) {
-    return idUsuario;
-}

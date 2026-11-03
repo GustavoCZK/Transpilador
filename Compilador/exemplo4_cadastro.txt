@@ -1,3 +1,0 @@
-string usuario = "Gabriel_Silva";
-string status = "Ativo";
-return usuario;

@@ -1,3 +1,0 @@
-﻿const float imposto = 0.15;
-float valorBruto = 2500.00;
-return valorBruto;

@@ -1,5 +1,0 @@
-private double taxaFixa = 5.75;
-string namespaceApp = "SistemaAcademico";
-bool processado = false;
-int resultadoFinal = 100;
-return resultadoFinal;

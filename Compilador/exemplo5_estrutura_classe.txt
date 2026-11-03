@@ -1,6 +1,0 @@
-public static class ProgramaPrincipal {
-    void executar() {
-        int codigoStatus = 200;
-        return codigoStatus;
-    }
-}
